@@ -401,8 +401,6 @@ public class ReactiveInsertCoordinatorStandard extends AbstractMutationCoordinat
 
 		// add the discriminator
 		entityPersister().addDiscriminatorToInsertGroup( insertGroupBuilder );
-
-		// add auxiliary mappings (e.g. soft delete)
 		entityPersister().addAuxiliaryToInsertGroup( insertGroupBuilder );
 
 		// add the keys
