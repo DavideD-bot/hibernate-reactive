@@ -159,21 +159,6 @@ public class ReactiveJoinedSubclassEntityPersister extends JoinedSubclassEntityP
 	}
 
 	@Override
-	protected InsertCoordinator buildInsertCoordinator() {
-		return ReactiveCoordinatorFactory.buildInsertCoordinator( this, getFactory() );
-	}
-
-	@Override
-	protected UpdateCoordinator buildUpdateCoordinator() {
-		return ReactiveCoordinatorFactory.buildUpdateCoordinator( this, getFactory() );
-	}
-
-	@Override
-	protected DeleteCoordinator buildDeleteCoordinator() {
-		return ReactiveCoordinatorFactory.buildDeleteCoordinator( super.getSoftDeleteMapping(), this, getFactory() );
-	}
-
-	@Override
 	public Generator getGenerator() throws HibernateException {
 		return reactiveDelegate.reactive( super.getGenerator() );
 	}
@@ -193,6 +178,26 @@ public class ReactiveJoinedSubclassEntityPersister extends JoinedSubclassEntityP
 	@Override
 	public NaturalIdMapping generateNaturalIdMapping(MappingModelCreationProcess creationProcess, PersistentClass bootEntityDescriptor) {
 		return ReactiveAbstractEntityPersister.super.generateNaturalIdMapping(creationProcess, bootEntityDescriptor);
+	}
+
+	@Override
+	public InsertCoordinator getInsertCoordinator() {
+		return reactiveDelegate.getInsertCoordinator();
+	}
+
+	@Override
+	public UpdateCoordinator getUpdateCoordinator() {
+		return reactiveDelegate.getUpdateCoordinator();
+	}
+
+	@Override
+	public UpdateCoordinator getMergeCoordinator() {
+		return reactiveDelegate.getMergeCoordinator();
+	}
+
+	@Override
+	public DeleteCoordinator getDeleteCoordinator() {
+		return reactiveDelegate.getDeleteCoordinator();
 	}
 
 	@Override

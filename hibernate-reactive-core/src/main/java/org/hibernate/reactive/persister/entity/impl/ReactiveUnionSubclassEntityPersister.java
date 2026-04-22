@@ -164,21 +164,6 @@ public class ReactiveUnionSubclassEntityPersister extends UnionSubclassEntityPer
 	}
 
 	@Override
-	protected InsertCoordinator buildInsertCoordinator() {
-		return ReactiveCoordinatorFactory.buildInsertCoordinator( this, getFactory() );
-	}
-
-	@Override
-	protected UpdateCoordinator buildUpdateCoordinator() {
-		return ReactiveCoordinatorFactory.buildUpdateCoordinator( this, getFactory() );
-	}
-
-	@Override
-	protected DeleteCoordinator buildDeleteCoordinator() {
-		return ReactiveCoordinatorFactory.buildDeleteCoordinator( super.getSoftDeleteMapping(), this, getFactory() );
-	}
-
-	@Override
 	public <T> DomainResult<T> createDomainResult(
 			NavigablePath navigablePath,
 			TableGroup tableGroup,
@@ -319,6 +304,26 @@ public class ReactiveUnionSubclassEntityPersister extends UnionSubclassEntityPer
 
 	private CompletionStage<?> doReactiveLoad(Object id, Object optionalObject, LockOptions lockOptions, Boolean readOnly, SharedSessionContractImplementor session) {
 		return reactiveDelegate.load( this, id, optionalObject, lockOptions, readOnly, session );
+	}
+
+	@Override
+	public InsertCoordinator getInsertCoordinator() {
+		return reactiveDelegate.getInsertCoordinator();
+	}
+
+	@Override
+	public UpdateCoordinator getUpdateCoordinator() {
+		return reactiveDelegate.getUpdateCoordinator();
+	}
+
+	@Override
+	public UpdateCoordinator getMergeCoordinator() {
+		return reactiveDelegate.getMergeCoordinator();
+	}
+
+	@Override
+	public DeleteCoordinator getDeleteCoordinator() {
+		return reactiveDelegate.getDeleteCoordinator();
 	}
 
 	@Override

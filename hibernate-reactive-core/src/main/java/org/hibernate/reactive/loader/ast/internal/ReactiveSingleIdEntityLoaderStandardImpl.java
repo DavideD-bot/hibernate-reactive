@@ -12,6 +12,7 @@ import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.loader.ast.internal.LoaderSelectBuilder;
 import org.hibernate.loader.ast.internal.SingleIdEntityLoaderStandardImpl;
+import org.hibernate.sql.ast.spi.SqlAliasBaseManager;
 import org.hibernate.metamodel.mapping.EntityMappingType;
 import org.hibernate.reactive.loader.ast.spi.ReactiveSingleIdEntityLoader;
 import org.hibernate.sql.ast.tree.select.SelectStatement;
@@ -86,6 +87,7 @@ public class ReactiveSingleIdEntityLoaderStandardImpl<T> extends SingleIdEntityL
 				queryInfluencers,
 				lockOptions,
 				jdbcParametersListBuilder::add,
+				new SqlAliasBaseManager(),
 				sessionFactory
 		);
 		final JdbcParametersList jdbcParameters = jdbcParametersListBuilder.build();

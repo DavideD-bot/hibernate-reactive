@@ -4,6 +4,7 @@
  */
 package org.hibernate.reactive.engine.impl;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
@@ -104,22 +105,31 @@ public class ReactivePersistenceContextAdapter implements PersistenceContext {
 		throw LOG.nonReactiveMethodCall( "reactiveGetDatabaseSnapshot" );
 	}
 
-	private static final Object[] NO_ROW = new Object[] {PersistenceContext.NO_ROW};
+	private static final Serializable NO_ROW = new Serializable() {
+		@Override
+		public String toString() {
+			return "NO_ROW";
+		}
+		@Serial
+		public Object readResolve() {
+			return NO_ROW;
+		}
+	};
 
 	public CompletionStage<Object[]> reactiveGetDatabaseSnapshot(Object id, EntityPersister persister) throws HibernateException {
 		SessionImplementor session = (SessionImplementor) getSession();
 		final EntityKey key = session.generateEntityKey( id, persister );
-		final Object[] cached = getEntitySnapshotsByKey() == null
+		final Object cached = getEntitySnapshotsByKey() == null
 				? null
-				: (Object[]) getEntitySnapshotsByKey().get( key );
+				: getEntitySnapshotsByKey().get( key );
 		if ( cached != null ) {
-			return completedFuture( cached == NO_ROW ? null : cached );
+			return completedFuture( cached == NO_ROW ? null : (Object[]) cached );
 		}
 		else {
 			return ( (ReactiveEntityPersister) persister )
 					.reactiveGetDatabaseSnapshot( id, session )
 					.thenApply( snapshot -> {
-						getOrInitializeEntitySnapshotsByKey().put( key, snapshot );
+						getOrInitializeEntitySnapshotsByKey().put( key, snapshot != null ? snapshot : NO_ROW );
 						return snapshot;
 					} );
 		}
@@ -733,8 +743,10 @@ public class ReactivePersistenceContextAdapter implements PersistenceContext {
 	public CompletionStage<Void> reactivePostLoad(
 			JdbcValuesSourceProcessingState processingState,
 			Consumer<EntityHolder> holderConsumer) {
-		final ReactiveCallbackImpl callback = (ReactiveCallbackImpl) processingState
-				.getExecutionContext().getCallback();
+		final org.hibernate.sql.exec.spi.Callback rawCallback = processingState.getExecutionContext().getCallback();
+		final ReactiveCallbackImpl callback = rawCallback instanceof ReactiveCallbackImpl
+				? (ReactiveCallbackImpl) rawCallback
+				: null;
 		return processHolders(
 				holderConsumer,
 				processingState.getLoadingEntityHolders(),

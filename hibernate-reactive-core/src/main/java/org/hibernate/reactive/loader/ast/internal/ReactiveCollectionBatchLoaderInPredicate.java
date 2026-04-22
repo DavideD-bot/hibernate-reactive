@@ -19,6 +19,7 @@ import org.hibernate.internal.util.MutableInteger;
 import org.hibernate.internal.util.collections.CollectionHelper;
 import org.hibernate.loader.ast.internal.LoaderSelectBuilder;
 import org.hibernate.metamodel.mapping.PluralAttributeMapping;
+import org.hibernate.sql.ast.spi.SqlAliasBaseManager;
 import org.hibernate.query.spi.QueryOptions;
 import org.hibernate.sql.ast.tree.select.SelectStatement;
 import org.hibernate.sql.exec.spi.JdbcSelect;
@@ -71,6 +72,7 @@ public class ReactiveCollectionBatchLoaderInPredicate extends ReactiveAbstractCo
 				influencers,
 				LockOptions.NONE,
 				jdbcParametersBuilder::add,
+				new SqlAliasBaseManager(),
 				sessionFactory
 		);
 		this.jdbcParameters = jdbcParametersBuilder.build();

@@ -1,6 +1,7 @@
 [versions]
 asciidoctorJVersion = "3.0.1"
 assertjVersion = "3.27.7"
+checkerQualVersion = "3.37.0"
 hibernateAsciidoctorExtensionsVersion = "3.2.1.Final"
 hibernateAsciidoctorThemeVersion = "6.0.4.Final"
 hibernateOrmVersion = "8.0.0.Final"
@@ -16,6 +17,7 @@ vertxWebVersion= "5.0.10"
 vertxWebClientVersion = "5.0.10"
 
 [libraries]
+checker-qual = { group = "org.checkerframework", name = "checker-qual", version.ref = "checkerQualVersion" }
 com-fasterxml-jackson-core-jackson-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jacksonDatabindVersion" }
 com-ibm-db2-jcc = { group = "com.ibm.db2", name = "jcc", version = "12.1.4.0" }
 com-microsoft-sqlserver-mssql-jdbc = { group = "com.microsoft.sqlserver", name = "mssql-jdbc", version = "13.4.0.jre11" }

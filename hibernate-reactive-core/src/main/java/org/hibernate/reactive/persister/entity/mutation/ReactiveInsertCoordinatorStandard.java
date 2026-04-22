@@ -392,7 +392,7 @@ public class ReactiveInsertCoordinatorStandard extends AbstractMutationCoordinat
 							attributeMapping.forEachInsertable( insertGroupBuilder );
 						}
 						else if ( isValueGenerationInSql( generator, factory().getJdbcServices().getDialect() ) ) {
-							handleValueGeneration( attributeMapping, insertGroupBuilder, (OnExecutionGenerator) generator );
+							handleValueGeneration( attributeMapping, insertGroupBuilder, (OnExecutionGenerator) generator, INSERT );
 						}
 					}
 				}
@@ -401,7 +401,9 @@ public class ReactiveInsertCoordinatorStandard extends AbstractMutationCoordinat
 
 		// add the discriminator
 		entityPersister().addDiscriminatorToInsertGroup( insertGroupBuilder );
-		entityPersister().addSoftDeleteToInsertGroup( insertGroupBuilder );
+
+		// add auxiliary mappings (e.g. soft delete)
+		entityPersister().addAuxiliaryToInsertGroup( insertGroupBuilder );
 
 		// add the keys
 		insertGroupBuilder.forEachTableMutationBuilder( (tableMutationBuilder) -> {

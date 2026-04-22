@@ -159,7 +159,8 @@ public class ReactiveUpdateCoordinatorStandard extends UpdateCoordinatorStandard
 							versionMapping,
 							dirtyAttributeIndexes,
 							attributeUpdateability,
-							forceDynamicUpdate
+							forceDynamicUpdate,
+							entityPersister().excludedFromTemporalVersioning( dirtyAttributeIndexes, hasDirtyCollection )
 					);
 
 					// doDynamicUpdate, doVersionUpdate, or doStaticUpdate will initialize the stage,
@@ -312,6 +313,7 @@ public class ReactiveUpdateCoordinatorStandard extends UpdateCoordinatorStandard
 		final ReactiveMutationExecutor mutationExecutor = mutationExecutor( session, dynamicUpdateGroup );
 
 		decomposeForUpdate(
+				entity,
 				id,
 				rowId,
 				values,
@@ -373,6 +375,7 @@ public class ReactiveUpdateCoordinatorStandard extends UpdateCoordinatorStandard
 		final ReactiveMutationExecutor mutationExecutor = mutationExecutor( session, staticUpdateGroup );
 
 		decomposeForUpdate(
+				entity,
 				id,
 				rowId,
 				values,
